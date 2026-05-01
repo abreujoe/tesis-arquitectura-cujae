@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de Tesis — Facultad de Arquitectura CUJAE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #1a1208;
+    --paper:   #f5f0e8;
+    --cream:   #ede7d5;
+    --gold:    #b5882a;
+    --rust:    #8b3a1e;
+    --sage:    #4a6741;
+    --muted:   #7a7060;
+    --border:  #d4c9b0;
+    --card-bg: #faf7f0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(181,136,42,0.15) 0%, transparent 70%);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent 60%);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .header-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .header-sub {
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.55);
+    margin-top: 0.5rem;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.8rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: rgba(245,240,232,0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+
+  /* ── CONTROLES ───────────────────────────────────── */
+  .controls {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(26,18,8,0.08);
+  }
+
+  .controls-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  input[type="search"] {
+    width: 100%;
+    padding: 0.6rem 0.75rem 0.6rem 2.4rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--card-bg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="search"]:focus {
+    border-color: var(--gold);
+  }
+
+  select {
+    padding: 0.6rem 1.8rem 0.6rem 0.75rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--card-bg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink);
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color 0.2s;
+  }
+
+  select:focus { border-color: var(--gold); }
+
+  .count-badge {
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+    padding: 0.35rem 0.75rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+
+  .count-badge span {
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  /* ── MAIN ────────────────────────────────────────── */
+  main {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 2rem 4rem;
+  }
+
+  /* ── CARDS ───────────────────────────────────────── */
+  #results {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.25s, transform 0.2s;
+    animation: fadeUp 0.35s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover {
+    box-shadow: 0 6px 24px rgba(26,18,8,0.1);
+    transform: translateY(-2px);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.4rem 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .card-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    min-width: 2rem;
+    padding-top: 2px;
+    opacity: 0.7;
+  }
+
+  .card-main { flex: 1; }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .meta-item svg { opacity: 0.6; flex-shrink: 0; }
+
+  .pill {
+    display: inline-block;
+    padding: 0.18rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  .pill-year {
+    background: rgba(181,136,42,0.12);
+    color: var(--gold);
+    border: 1px solid rgba(181,136,42,0.3);
+  }
+
+  .card-toggle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: background 0.2s, transform 0.3s;
+  }
+
+  .card.open .card-toggle {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: rotate(180deg);
+  }
+
+  .card.open .card-toggle svg { color: white; }
+
+  /* ── CARD BODY (expandible) ──────────────────────── */
+  .card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    border-top: 0px solid var(--border);
+  }
+
+  .card.open .card-body {
+    max-height: 800px;
+    border-top-width: 1px;
+  }
+
+  .card-body-inner {
+    padding: 1.2rem 1.4rem 1.4rem 1.4rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .detail-section { }
+
+  .detail-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .detail-value {
+    font-size: 0.88rem;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .detail-value.resumen {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.2rem;
+  }
+
+  .keyword {
+    padding: 0.2rem 0.65rem;
+    background: rgba(74,103,65,0.1);
+    border: 1px solid rgba(74,103,65,0.25);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: var(--sage);
+  }
+
+  .tutores-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .tutor-item {
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+
+  /* ── EMPTY STATE ─────────────────────────────────── */
+  #empty {
+    display: none;
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--muted);
+  }
+
+  #empty svg { opacity: 0.25; margin-bottom: 1rem; }
+
+  #empty p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+  }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── HIGHLIGHT ───────────────────────────────────── */
+  mark {
+    background: rgba(181,136,42,0.25);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 2rem 1.2rem 1.8rem; }
+    .controls { padding: 1rem 1.2rem; }
+    main { padding: 1rem 1.2rem 3rem; }
+    .card-head { padding: 1rem 1rem 0.8rem; }
+    .card-body-inner { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <p class="header-tag">Facultad de Arquitectura · CUJAE · La Habana</p>
+    <h1>Catálogo de <em>Tesis</em><br>de Diploma</h1>
+    <p class="header-sub">Universidad Tecnológica de La Habana José Antonio Echeverría</p>
+    <div class="header-stats">
+      <div class="stat">
+        <span class="stat-num" id="stat-total">5</span>
+        <span class="stat-label">Tesis</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-years">1</span>
+        <span class="stat-label">Años</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-tutores">8</span>
+        <span class="stat-label">Tutores</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" id="search" placeholder="Buscar por título, autor, tutor, palabras clave…">
+    </div>
+    <select id="filter-year">
+      <option value="">Todos los años</option>
+    </select>
+    <div class="count-badge">Mostrando <span id="count">5</span> tesis</div>
+  </div>
+</div>
+
+<main>
+  <div id="results"></div>
+  <div id="empty">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <p>No se encontraron tesis con ese criterio.</p>
+  </div>
+</main>
+
+<footer>
+  Catálogo de Tesis · Facultad de Arquitectura CUJAE · La Habana, Cuba
+</footer>
+
+<script>
+const TESIS = [
+  {
+    titulo: "Contribución al Plan de Gestión de la Universidad de La Habana como Patrimonio Mundial",
+    diplomantes: ["Grethel González Lara", "Esmirna Frontela Nodarse", "Beatriz Duarte Márquez"],
+    tutores: ["Dr. Arq. Vilma Rodríguez Tápanes", "Dr. Arq. Ángela Victoria Rojas Ávalos", "Arq. Larisa Castillo Rodríguez"],
+    año: "2025",
+    palabras_clave: ["patrimonio mundial", "gestión universitaria", "Universidad de La Habana", "conservación", "planificación urbana"],
+    resumen: "Este trabajo aborda la contribución al Plan de Gestión de la Universidad de La Habana como Patrimonio Mundial. A partir de un diagnóstico del estado actual del conjunto universitario y su entorno, se proponen estrategias de gestión patrimonial que integran la conservación del valor histórico-arquitectónico con las necesidades funcionales de la institución.",
+    indice: "1. Introducción · 2. Marco Teórico · 3. Diagnóstico Patrimonial · 4. Plan de Gestión · 5. Propuesta · 6. Conclusiones"
+  },
+  {
+    titulo: "Propuesta de Intervención para un Edificio Multifamiliar Destinado a Viviendas Productivas y Colaborativas en el Centro Histórico de La Habana Vieja",
+    diplomantes: ["Angélica María Guerra Márquez"],
+    tutores: ["Arq. Orlando Inclán Castañeda", "Jandris L. de Zayas Sarrías"],
+    año: "2025",
+    palabras_clave: ["vivienda productiva", "rehabilitación", "Centro Histórico", "Habana Vieja", "colaborativo"],
+    resumen: "Propuesta de intervención arquitectónica para el Edificio Torregrosa, inmueble de valor patrimonial ubicado en el Centro Histórico de La Habana Vieja. El proyecto explora el concepto de vivienda productiva y colaborativa como modelo de habitar contemporáneo que dialoga con el tejido histórico de la ciudad.",
+    indice: "1. Introducción · 2. El Edificio Torregrosa · 3. Diagnóstico · 4. Programa Arquitectónico · 5. Propuesta de Intervención · 6. Conclusiones"
+  },
+  {
+    titulo: "Cubiertas Productivas como Núcleo Integrador de la Regeneración Urbana. Autosuficiencia energética y alimentaria en una zona consolidada de la ciudad de La Habana: El Vedado",
+    diplomantes: ["Laura Torres García", "Roxana Roque Valdés"],
+    tutores: ["Dr. Ing. Arq. Abel Tablada de la Torre"],
+    año: "2025",
+    palabras_clave: ["cubiertas productivas", "regeneración urbana", "autosuficiencia energética", "El Vedado", "agricultura urbana", "sostenibilidad"],
+    resumen: "La investigación explora las cubiertas productivas como estrategia de regeneración urbana en El Vedado, zona consolidada de La Habana. Se analiza el potencial de las azoteas para contribuir a la autosuficiencia energética y alimentaria del barrio, proponiendo un sistema integrado de intervenciones a escala urbana y arquitectónica.",
+    indice: "1. Introducción · 2. Cubiertas Productivas · 3. El Vedado como caso de estudio · 4. Diagnóstico · 5. Estrategia de Intervención · 6. Propuesta · 7. Conclusiones"
+  },
+  {
+    titulo: "Intervención en el Sistema de Espacios Públicos en el Barrio Colón, Centro Habana",
+    diplomantes: ["Thalía Pérez Cabrera"],
+    tutores: ["Dr. Arq. Joiselen Cazanave Macías", "Arq. Thalía Pérez Martínez"],
+    año: "2025",
+    palabras_clave: ["espacios públicos", "barrio Colón", "Centro Habana", "calidad de vida", "urbanismo"],
+    resumen: "Esta tesis aborda una intervención del sistema de espacios públicos en el barrio de Colón, Centro Habana, como vía para mejorar la calidad de vida urbana de sus habitantes. A partir de un diagnóstico territorial y social, se propone una intervención urbana integral basada en la mejora de espacios existentes y la incorporación de nuevas tipologías adaptadas al contexto local.",
+    indice: "1. Introducción · 2. Marco Teórico · 3. Diagnóstico del Barrio Colón · 4. Propuesta de Intervención · 5. Tipologías · 6. Conclusiones"
+  },
+  {
+    titulo: 'Propuesta de Rehabilitación para la Sede del Proyecto de Desarrollo Local "Nativa, Red de Microviveros"',
+    diplomantes: ["Odilaisy Camejo Hernández"],
+    tutores: ["Prof. Arq. Carlos Guerra Astorga", "Arq. Alejandro López Rodríguez"],
+    año: "2025",
+    palabras_clave: ["rehabilitación", "desarrollo local", "microviveros", "arquitectura sostenible", "CUJAE"],
+    resumen: "Propuesta de rehabilitación arquitectónica para la sede del proyecto de desarrollo local Nativa, Red de Microviveros. El proyecto integra principios de arquitectura sostenible y diseño bioclimático para crear un espacio que apoye las actividades productivas y formativas del proyecto comunitario.",
+    indice: "1. Introducción · 2. El Proyecto Nativa · 3. Diagnóstico del Inmueble · 4. Propuesta de Rehabilitación · 5. Conclusiones"
+  }
+];
+
+// ── Poblar filtro de años ──────────────────────────
+const años = [...new Set(TESIS.map(t => t.año))].sort().reverse();
+const selYear = document.getElementById('filter-year');
+años.forEach(a => {
+  const opt = document.createElement('option');
+  opt.value = opt.textContent = a;
+  selYear.appendChild(opt);
+});
+
+// Actualizar estadísticas
+document.getElementById('stat-total').textContent = TESIS.length;
+document.getElementById('stat-years').textContent = años.length;
+const allTutores = new Set(TESIS.flatMap(t => t.tutores));
+document.getElementById('stat-tutores').textContent = allTutores.size;
+
+// ── Renderizado ───────────────────────────────────
+function highlight(text, query) {
+  if (!query) return text;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+}
+
+function render(lista, query) {
+  const container = document.getElementById('results');
+  const empty     = document.getElementById('empty');
+  document.getElementById('count').textContent = lista.length;
+
+  if (lista.length === 0) {
+    container.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  container.innerHTML = lista.map((t, idx) => {
+    const q  = query || '';
+    const diplomantesStr = t.diplomantes.join('\n');
+    const tutoresStr     = t.tutores.join('\n');
+
+    return `
+    <article class="card" data-idx="${idx}">
+      <div class="card-head">
+        <span class="card-num">${String(idx+1).padStart(2,'0')}</span>
+        <div class="card-main">
+          <h2 class="card-title">${highlight(t.titulo, q)}</h2>
+          <div class="card-meta">
+            <span class="meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              ${highlight(t.diplomantes.join(' · '), q)}
+            </span>
+            <span class="meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span class="pill pill-year">${t.año}</span>
+            </span>
+          </div>
+        </div>
+        <div class="card-toggle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="detail-section">
+            <p class="detail-label">Diplomante(s)</p>
+            <div class="tutores-list">
+              ${t.diplomantes.map(d => `<span class="tutor-item">${highlight(d, q)}</span>`).join('')}
+            </div>
+          </div>
+          <div class="detail-section">
+            <p class="detail-label">Tutor(es)</p>
+            <div class="tutores-list">
+              ${t.tutores.map(tu => `<span class="tutor-item">${highlight(tu, q)}</span>`).join('')}
+            </div>
+          </div>
+          <div class="detail-section">
+            <p class="detail-label">Resumen</p>
+            <p class="detail-value resumen">${highlight(t.resumen, q)}</p>
+          </div>
+          <div class="detail-section">
+            <p class="detail-label">Palabras clave</p>
+            <div class="keywords">
+              ${t.palabras_clave.map(k => `<span class="keyword">${highlight(k, q)}</span>`).join('')}
+            </div>
+          </div>
+          <div class="detail-section">
+            <p class="detail-label">Índice</p>
+            <p class="detail-value">${highlight(t.indice, q)}</p>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  // Toggle cards
+  container.querySelectorAll('.card-head').forEach(head => {
+    head.addEventListener('click', () => {
+      head.closest('.card').classList.toggle('open');
+    });
+  });
+}
+
+// ── Filtrado ──────────────────────────────────────
+function filtrar() {
+  const q    = document.getElementById('search').value.trim().toLowerCase();
+  const year = selYear.value;
+
+  let lista = TESIS.filter(t => {
+    const haystack = [
+      t.titulo, ...t.diplomantes, ...t.tutores,
+      t.resumen, ...t.palabras_clave, t.indice, t.año
+    ].join(' ').toLowerCase();
+
+    const matchQ    = !q    || haystack.includes(q);
+    const matchYear = !year || t.año === year;
+    return matchQ && matchYear;
+  });
+
+  render(lista, q);
+}
+
+document.getElementById('search').addEventListener('input', filtrar);
+selYear.addEventListener('change', filtrar);
+
+// Render inicial
+render(TESIS, '');
+</script>
+</body>
+</html>
